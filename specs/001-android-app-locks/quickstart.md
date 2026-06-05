@@ -121,6 +121,72 @@ Expected outcome:
 - If the same package identifier appears again before expiration, enforcement reapplies automatically.
 - If policy state is uncertain, Lockin fails closed and continues treating the package as blocked.
 
+## User Story 3 Managed-Device Validation Checkpoint
+
+Use a disposable Device Owner emulator or test device. Do not use a personal
+device or a package you cannot afford to hide temporarily.
+
+1. Install and provision Lockin as Device Owner:
+
+   ```bash
+   cd /Users/mac/development/lockin/android-app
+   ./gradlew installDebug
+   adb shell dpm set-device-owner com.lockin/.device.LockinDeviceAdminReceiver
+   ```
+
+2. Create a 2 minute lock for one test package.
+3. Confirm the package is blocked:
+
+   ```bash
+   adb shell monkey -p TEST_PACKAGE 1
+   ```
+
+4. Force-stop and relaunch Lockin before the lock expires:
+
+   ```bash
+   adb shell am force-stop com.lockin
+   adb shell am start -n com.lockin/.MainActivity
+   adb shell monkey -p TEST_PACKAGE 1
+   ```
+
+5. Reboot the device before the lock expires:
+
+   ```bash
+   adb reboot
+   adb wait-for-device
+   adb shell monkey -p TEST_PACKAGE 1
+   ```
+
+6. If the package can be removed on the test device, uninstall and reinstall the
+   same package identifier before expiration. Confirm Lockin re-hides or
+   re-suspends that package after the package change broadcast.
+7. Wait until the lock duration has fully elapsed while Lockin is not in the
+   foreground, then confirm the scheduled expiration release. Do not press
+   Android Studio Run/rerun during this wait, because that force-stops the app
+   and Android cancels pending alarms for force-stopped packages until the app
+   is launched again:
+
+   ```bash
+   adb shell monkey -p TEST_PACKAGE 1
+   ```
+
+8. If the package still appears blocked after expiration, open Lockin to trigger
+   startup reconciliation and retry:
+
+   ```bash
+   adb shell am start -n com.lockin/.MainActivity
+   adb shell monkey -p TEST_PACKAGE 1
+   ```
+
+Expected outcome:
+
+- Restart, reboot, and package replacement reapply policy while a lock remains active.
+- Date/time settings are restricted while any active lock exists.
+- Expiration releases hidden, suspended, and uninstall-blocked policies only when no active lock still covers the package identifier.
+- If exact alarm access is denied by Android, idle release may be delivered later by the system alarm fallback; opening Lockin still performs immediate startup reconciliation.
+- Overlapping locks keep the package blocked until the latest applicable lock end time.
+- Policy reconciliation events remain local in Room and are not analytics.
+
 ## Scenario 5: Local Statistics
 
 1. Complete several locks with different apps and moods.

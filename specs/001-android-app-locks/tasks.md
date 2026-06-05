@@ -126,25 +126,25 @@
 
 ### Verification for User Story 3
 
-- [ ] T060 [P] [US3] Add unit tests for package-id-based reinstall reconciliation in `app/src/test/kotlin/com/lockin/device/PackageReconciliationTest.kt`
-- [ ] T061 [P] [US3] Add unit tests for fail-closed enforcement decisions in `app/src/test/kotlin/com/lockin/device/FailClosedPolicyTest.kt`
-- [ ] T062 [P] [US3] Add Robolectric tests for boot and package-change receiver orchestration in `app/src/test/kotlin/com/lockin/device/ReceiverReconciliationTest.kt`
-- [ ] T063 [P] [US3] Add Room integration tests for policy reconciliation event recording in `app/src/test/kotlin/com/lockin/data/PolicyReconciliationRepositoryTest.kt`
-- [ ] T064 [US3] Add managed-device instrumentation tests for Device Owner policy gateway calls in `app/src/androidTest/kotlin/com/lockin/device/DevicePolicyGatewayInstrumentedTest.kt`
-- [ ] T065 [US3] Record manual managed-device validation for reboot, reinstall, uninstall blocking, foreground app removal, and clock-change resistance in `specs/001-android-app-locks/quickstart.md`
-- [ ] T096 [US3] Add verification for scheduled lock expiration and package release while Lockin is idle in `app/src/test/kotlin/com/lockin/domain/lock/LockExpirationSchedulerTest.kt`
+- [X] T060 [P] [US3] Add unit tests for package-id-based reinstall reconciliation in `app/src/test/kotlin/com/lockin/device/PackageReconciliationTest.kt`
+- [X] T061 [P] [US3] Add unit tests for fail-closed enforcement decisions in `app/src/test/kotlin/com/lockin/device/FailClosedPolicyTest.kt`
+- [X] T062 [P] [US3] Add Robolectric tests for boot and package-change receiver orchestration in `app/src/test/kotlin/com/lockin/device/ReceiverReconciliationTest.kt`
+- [X] T063 [P] [US3] Add Room integration tests for policy reconciliation event recording in `app/src/test/kotlin/com/lockin/data/PolicyReconciliationRepositoryTest.kt`
+- [X] T064 [US3] Add managed-device instrumentation tests for Device Owner policy gateway calls in `app/src/androidTest/kotlin/com/lockin/device/DevicePolicyGatewayInstrumentedTest.kt`
+- [X] T065 [US3] Record manual managed-device validation for reboot, reinstall, uninstall blocking, foreground app removal, and clock-change resistance in `specs/001-android-app-locks/quickstart.md`
+- [X] T096 [US3] Add verification for scheduled lock expiration and package release while Lockin is idle in `app/src/test/kotlin/com/lockin/domain/lock/LockExpirationSchedulerTest.kt`
 
 ### Implementation for User Story 3
 
-- [ ] T066 [P] [US3] Implement package reconciliation trigger enum and policy result mapping in `app/src/main/kotlin/com/lockin/device/PolicyReconciliation.kt`
+- [X] T066 [P] [US3] Implement package reconciliation trigger enum and policy result mapping in `app/src/main/kotlin/com/lockin/device/PolicyReconciliation.kt`
 - [X] T067 [US3] Extend lock policy enforcer with hide, suspend, uninstall-block, release, overlap, and fail-closed behavior in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
-- [ ] T068 [US3] Implement boot receiver to reconcile active locks before normal use after reboot in `app/src/main/kotlin/com/lockin/device/BootReceiver.kt`
-- [ ] T069 [US3] Implement package change receiver for installed, changed, replaced, and removed package events in `app/src/main/kotlin/com/lockin/device/PackageChangeReceiver.kt`
+- [X] T068 [US3] Implement boot receiver to reconcile active locks before normal use after reboot in `app/src/main/kotlin/com/lockin/device/BootReceiver.kt`
+- [X] T069 [US3] Implement package change receiver for installed, changed, replaced, and removed package events in `app/src/main/kotlin/com/lockin/device/PackageChangeReceiver.kt`
 - [X] T070 [US3] Implement app startup reconciliation in `app/src/main/kotlin/com/lockin/LockinApp.kt`
-- [ ] T071 [US3] Implement date, time, and time-zone configuration restriction handling during active locks in `app/src/main/kotlin/com/lockin/device/TimeRestrictionPolicy.kt`
+- [X] T071 [US3] Implement date, time, and time-zone configuration restriction handling during active locks in `app/src/main/kotlin/com/lockin/device/TimeRestrictionPolicy.kt`
 - [X] T072 [US3] Implement active-lock expiration reconciliation and release of packages only when no active lock covers the package identifier in `app/src/main/kotlin/com/lockin/domain/lock/LockExpirationReconciler.kt`
-- [ ] T097 [US3] Implement local lock expiration scheduling and trigger wiring in `app/src/main/kotlin/com/lockin/domain/lock/LockExpirationScheduler.kt`
-- [ ] T073 [US3] Add local policy reconciliation event recording to all enforcement triggers in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
+- [X] T097 [US3] Implement local lock expiration scheduling and trigger wiring in `app/src/main/kotlin/com/lockin/domain/lock/LockExpirationScheduler.kt`
+- [X] T073 [US3] Add local policy reconciliation event recording to all enforcement triggers in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
 
 **Checkpoint**: User Story 3 proves lock credibility across lifecycle, boot, package, and policy uncertainty events.
 

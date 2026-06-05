@@ -12,13 +12,16 @@ class LockinApp : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     val container: LockinContainer by lazy {
-        LockinContainer(this)
+        LockinContainer(this, applicationScope)
     }
 
     override fun onCreate() {
         super.onCreate()
         applicationScope.launch {
-            container.lockExpirationReconciler.reconcile(PolicyReconciliationTrigger.APP_START)
+            container.lockReconciliationRunner.reconcile(
+                trigger = PolicyReconciliationTrigger.APP_START,
+                refreshInstalledApps = true
+            )
         }
     }
 }

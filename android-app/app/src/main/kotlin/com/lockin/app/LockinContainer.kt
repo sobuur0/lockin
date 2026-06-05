@@ -12,11 +12,15 @@ import com.lockin.device.AndroidDeviceOwnerState
 import com.lockin.device.AndroidDevicePolicyGateway
 import com.lockin.device.DeviceOwnerState
 import com.lockin.device.DevicePolicyGateway
+import com.lockin.device.LockReconciliationRunner
 import com.lockin.device.LockPolicyEnforcer
+import com.lockin.device.TimeRestrictionPolicy
 import com.lockin.domain.appcatalog.AndroidAppCatalogScanner
 import com.lockin.domain.appcatalog.AppCatalogScanner
+import com.lockin.domain.lock.AndroidLockExpirationScheduler
 import com.lockin.domain.lock.LockUseCases
 import com.lockin.domain.lock.LockExpirationReconciler
+import com.lockin.domain.lock.LockExpirationScheduler
 import com.lockin.domain.lock.SystemTimeProvider
 import com.lockin.domain.lock.TimeProvider
 import com.lockin.domain.templates.TemplateUseCases
@@ -25,8 +29,13 @@ import com.lockin.domain.repository.LockRepository
 import com.lockin.domain.repository.PolicyEventRepository
 import com.lockin.domain.repository.StatisticsRepository
 import com.lockin.domain.repository.TemplateRepository
+import com.lockin.data.entities.PolicyReconciliationTrigger
+import kotlinx.coroutines.CoroutineScope
 
-class LockinContainer(context: Context) {
+class LockinContainer(
+    context: Context,
+    private val applicationScope: CoroutineScope? = null
+) {
     private val appContext = context.applicationContext
 
     val database: LockinDatabase by lazy {
@@ -71,12 +80,32 @@ class LockinContainer(context: Context) {
         RoomStatisticsRepository(database, database.historyDao())
     }
 
+    val timeRestrictionPolicy: TimeRestrictionPolicy by lazy {
+        TimeRestrictionPolicy(devicePolicyGateway)
+    }
+
     val lockPolicyEnforcer: LockPolicyEnforcer by lazy {
         LockPolicyEnforcer(
             lockRepository = lockRepository,
             policyEventRepository = policyEventRepository,
             devicePolicyGateway = devicePolicyGateway,
-            timeProvider = timeProvider
+            timeProvider = timeProvider,
+            timeRestrictionPolicy = timeRestrictionPolicy
+        )
+    }
+
+    val lockExpirationScheduler: LockExpirationScheduler by lazy {
+        AndroidLockExpirationScheduler(
+            context = appContext,
+            lockRepository = lockRepository,
+            timeProvider = timeProvider,
+            coroutineScope = applicationScope,
+            onExpiration = {
+                lockReconciliationRunner.reconcile(
+                    trigger = PolicyReconciliationTrigger.LOCK_EXPIRED,
+                    refreshInstalledApps = false
+                )
+            }
         )
     }
 
@@ -86,7 +115,8 @@ class LockinContainer(context: Context) {
             lockRepository = lockRepository,
             deviceOwnerState = deviceOwnerState,
             timeProvider = timeProvider,
-            policyEnforcer = lockPolicyEnforcer
+            policyEnforcer = lockPolicyEnforcer,
+            lockExpirationScheduler = lockExpirationScheduler
         )
     }
 
@@ -104,6 +134,15 @@ class LockinContainer(context: Context) {
             lockRepository = lockRepository,
             policyEnforcer = lockPolicyEnforcer,
             timeProvider = timeProvider
+        )
+    }
+
+    val lockReconciliationRunner: LockReconciliationRunner by lazy {
+        LockReconciliationRunner(
+            appCatalogScanner = appCatalogScanner,
+            appRepository = appRepository,
+            lockExpirationReconciler = lockExpirationReconciler,
+            lockExpirationScheduler = lockExpirationScheduler
         )
     }
 

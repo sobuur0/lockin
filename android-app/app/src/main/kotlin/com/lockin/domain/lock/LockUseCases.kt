@@ -34,7 +34,8 @@ class LockUseCases(
     private val lockRepository: LockRepository,
     private val deviceOwnerState: DeviceOwnerState,
     private val timeProvider: TimeProvider,
-    private val policyEnforcer: ActiveLockPolicyEnforcer
+    private val policyEnforcer: ActiveLockPolicyEnforcer,
+    private val lockExpirationScheduler: LockExpirationScheduler? = null
 ) {
     suspend fun createLock(request: CreateLockRequest): LockUseCaseResult {
         if (!deviceOwnerState.currentStatus().isDeviceOwner) {
@@ -76,6 +77,7 @@ class LockUseCases(
         }
         val lockId = lockRepository.insertLock(lock, lockApplications)
         policyEnforcer.enforceActiveLocks(PolicyReconciliationTrigger.LOCK_CREATED)
+        lockExpirationScheduler?.scheduleNextExpiration()
         return LockUseCaseResult.Created(lockId)
     }
 
@@ -113,6 +115,7 @@ class LockUseCases(
             )
         )
         policyEnforcer.enforceActiveLocks(PolicyReconciliationTrigger.LOCK_EXTENDED)
+        lockExpirationScheduler?.scheduleNextExpiration()
         return LockUseCaseResult.Extended(
             lockId = lockId,
             resultingRemainingDuration = calculation.resultingRemainingDuration

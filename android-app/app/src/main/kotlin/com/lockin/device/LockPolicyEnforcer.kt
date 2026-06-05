@@ -3,6 +3,8 @@ package com.lockin.device
 import com.lockin.data.entities.PolicyReconciliationEventEntity
 import com.lockin.data.entities.PolicyReconciliationResult
 import com.lockin.data.entities.PolicyReconciliationTrigger
+import com.lockin.data.entities.LockStatus
+import com.lockin.device.PolicyReconciliation.toPolicyResult
 import com.lockin.domain.lock.TimeProvider
 import com.lockin.domain.repository.LockRepository
 import com.lockin.domain.repository.PolicyEventRepository
@@ -31,14 +33,26 @@ class LockPolicyEnforcer(
     private val lockRepository: LockRepository,
     private val policyEventRepository: PolicyEventRepository,
     private val devicePolicyGateway: DevicePolicyGateway,
-    private val timeProvider: TimeProvider
+    private val timeProvider: TimeProvider,
+    private val timeRestrictionPolicy: TimeRestrictionPolicy? = null
 ) : ActiveLockPolicyEnforcer {
     override suspend fun enforceActiveLocks(
         trigger: PolicyReconciliationTrigger
     ): LockPolicyEnforcementSummary {
-        val activePackageIds = lockRepository.observeActivePackageIds().first().toSet()
+        val activeLocks = lockRepository.observeActiveLocks().first()
+        val activePackageIds = activeLocks
+            .flatMap { it.applications }
+            .map { it.packageId }
+            .toSet()
 
         if (!devicePolicyGateway.isDeviceOwner()) {
+            activeLocks.forEach { lockWithApplications ->
+                if (lockWithApplications.lock.status != LockStatus.FAILED_CLOSED) {
+                    lockRepository.updateLock(
+                        lockWithApplications.lock.copy(status = LockStatus.FAILED_CLOSED)
+                    )
+                }
+            }
             record(
                 trigger = trigger,
                 packageId = null,
@@ -74,6 +88,22 @@ class LockPolicyEnforcer(
             failedPackageIds += activePackageIds
         }
 
+        timeRestrictionPolicy?.reconcile(activePackageIds.isNotEmpty())
+
+        activeLocks.forEach { lockWithApplications ->
+            val hasFailedPackage = lockWithApplications.applications.any {
+                it.packageId in failedPackageIds
+            }
+            val nextStatus = if (hasFailedPackage) {
+                LockStatus.FAILED_CLOSED
+            } else {
+                LockStatus.ACTIVE
+            }
+            if (lockWithApplications.lock.status != nextStatus) {
+                lockRepository.updateLock(lockWithApplications.lock.copy(status = nextStatus))
+            }
+        }
+
         activePackageIds.forEach { packageId ->
             val failed = packageId in failedPackageIds
             record(
@@ -89,6 +119,15 @@ class LockPolicyEnforcer(
                 } else {
                     "Active lock policy applied."
                 }
+            )
+        }
+
+        if (activePackageIds.isEmpty()) {
+            record(
+                trigger = trigger,
+                packageId = null,
+                result = PolicyReconciliationResult.ALREADY_APPLIED,
+                message = "No active lock policies require application."
             )
         }
 
@@ -155,7 +194,7 @@ class LockPolicyEnforcer(
                 result = if (failed) {
                     PolicyReconciliationResult.FAILED_CLOSED
                 } else {
-                    PolicyReconciliationResult.APPLIED
+                    suspension.result.toPolicyResult()
                 },
                 message = if (failed) {
                     "Expired lock policy release failed; package may remain blocked."

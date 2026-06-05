@@ -6,6 +6,12 @@ import android.content.Intent
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        // Full boot reconciliation is implemented in the US3 lifecycle tasks.
+        val trigger = PolicyReconciliation.triggerForBootIntent(intent) ?: return
+        ReconciliationDispatcher.dispatch(
+            receiver = this,
+            context = context,
+            trigger = trigger,
+            refreshInstalledApps = true
+        )
     }
 }

@@ -6,6 +6,12 @@ import android.content.Intent
 
 class PackageChangeReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        // Full package reconciliation is implemented in the US3 lifecycle tasks.
+        val trigger = PolicyReconciliation.triggerForPackageIntent(intent) ?: return
+        ReconciliationDispatcher.dispatch(
+            receiver = this,
+            context = context,
+            trigger = trigger,
+            refreshInstalledApps = true
+        )
     }
 }
