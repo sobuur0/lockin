@@ -65,27 +65,27 @@
 
 ### Verification for User Story 1
 
-- [ ] T031 [P] [US1] Add unit tests for duration validation and extension math in `app/src/test/kotlin/com/lockin/domain/lock/LockDurationTest.kt`
-- [ ] T032 [P] [US1] Add unit tests for irreversible lock state transitions and rejected weaken actions in `app/src/test/kotlin/com/lockin/domain/lock/LockStateMachineTest.kt`
-- [ ] T033 [P] [US1] Add Room integration tests for lock persistence, lock applications, extensions, and overlapping latest-end queries in `app/src/test/kotlin/com/lockin/data/LockRepositoryTest.kt`
-- [ ] T034 [P] [US1] Add contract tests for Device Owner gate and create-lock validation in `app/src/test/kotlin/com/lockin/contracts/CreateLockContractTest.kt`
-- [ ] T035 [P] [US1] Add ViewModel tests for create-lock confirmation, invalid input rejection, and extension confirmation in `app/src/test/kotlin/com/lockin/ui/lockcreate/CreateLockViewModelTest.kt`
-- [ ] T036 [US1] Add managed-device validation steps for create lock, blocked launch attempt, and extension behavior in `specs/001-android-app-locks/quickstart.md`
+- [X] T031 [P] [US1] Add unit tests for duration validation and extension math in `app/src/test/kotlin/com/lockin/domain/lock/LockDurationTest.kt`
+- [X] T032 [P] [US1] Add unit tests for irreversible lock state transitions and rejected weaken actions in `app/src/test/kotlin/com/lockin/domain/lock/LockStateMachineTest.kt`
+- [X] T033 [P] [US1] Add Room integration tests for lock persistence, lock applications, extensions, and overlapping latest-end queries in `app/src/test/kotlin/com/lockin/data/LockRepositoryTest.kt`
+- [X] T034 [P] [US1] Add contract tests for Device Owner gate and create-lock validation in `app/src/test/kotlin/com/lockin/contracts/CreateLockContractTest.kt`
+- [X] T035 [P] [US1] Add ViewModel tests for create-lock confirmation, invalid input rejection, and extension confirmation in `app/src/test/kotlin/com/lockin/ui/lockcreate/CreateLockViewModelTest.kt`
+- [X] T036 [US1] Add managed-device validation steps for create lock, blocked launch attempt, and extension behavior in `specs/001-android-app-locks/quickstart.md`
 
 ### Implementation for User Story 1
 
-- [ ] T037 [P] [US1] Implement lock state machine with active, completed, and failed-closed states in `app/src/main/kotlin/com/lockin/domain/lock/LockStateMachine.kt`
-- [ ] T038 [P] [US1] Implement lock duration calculation, remaining duration checkpointing, and extension calculation in `app/src/main/kotlin/com/lockin/domain/lock/LockTiming.kt`
-- [ ] T039 [P] [US1] Implement app selection eligibility rules for Lockin, launcher, and policy-exempt packages in `app/src/main/kotlin/com/lockin/domain/appcatalog/AppEligibility.kt`
-- [ ] T040 [US1] Implement lock creation and extension use cases in `app/src/main/kotlin/com/lockin/domain/lock/LockUseCases.kt`
-- [ ] T041 [US1] Implement initial lock policy enforcer for active locked package identifiers in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
-- [ ] T042 [US1] Implement Device Owner gate ViewModel in `app/src/main/kotlin/com/lockin/ui/deviceowner/DeviceOwnerGateViewModel.kt`
-- [ ] T043 [US1] Implement Device Owner setup, verification, and recovery guidance screen in `app/src/main/kotlin/com/lockin/ui/deviceowner/DeviceOwnerGateScreen.kt`
-- [ ] T044 [US1] Implement create-lock ViewModel for installed app selection, duration selection, irreversible confirmation, and lock creation in `app/src/main/kotlin/com/lockin/ui/lockcreate/CreateLockViewModel.kt`
-- [ ] T045 [US1] Implement create-lock Compose screen with app picker, minutes/hours/days/weeks/custom duration controls, and irreversible confirmation in `app/src/main/kotlin/com/lockin/ui/lockcreate/CreateLockScreen.kt`
-- [ ] T046 [US1] Implement lock detail ViewModel with remaining time, rejected weaken actions, and extension flow in `app/src/main/kotlin/com/lockin/ui/lockdetail/LockDetailViewModel.kt`
-- [ ] T047 [US1] Implement lock detail Compose screen with active status, blocked apps, remaining time, and extension controls in `app/src/main/kotlin/com/lockin/ui/lockdetail/LockDetailScreen.kt`
-- [ ] T048 [US1] Wire create-lock, lock-detail, Device Owner gate, and active-lock routes into navigation in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
+- [X] T037 [P] [US1] Implement lock state machine with active, completed, and failed-closed states in `app/src/main/kotlin/com/lockin/domain/lock/LockStateMachine.kt`
+- [X] T038 [P] [US1] Implement lock duration calculation, remaining duration checkpointing, and extension calculation in `app/src/main/kotlin/com/lockin/domain/lock/LockTiming.kt`
+- [X] T039 [P] [US1] Implement app selection eligibility rules for Lockin, launcher, and policy-exempt packages in `app/src/main/kotlin/com/lockin/domain/appcatalog/AppEligibility.kt`
+- [X] T040 [US1] Implement lock creation and extension use cases in `app/src/main/kotlin/com/lockin/domain/lock/LockUseCases.kt`
+- [X] T041 [US1] Implement initial lock policy enforcer for active locked package identifiers in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
+- [X] T042 [US1] Implement Device Owner gate ViewModel in `app/src/main/kotlin/com/lockin/ui/deviceowner/DeviceOwnerGateViewModel.kt`
+- [X] T043 [US1] Implement Device Owner setup, verification, and recovery guidance screen in `app/src/main/kotlin/com/lockin/ui/deviceowner/DeviceOwnerGateScreen.kt`
+- [X] T044 [US1] Implement create-lock ViewModel for installed app selection, duration selection, irreversible confirmation, and lock creation in `app/src/main/kotlin/com/lockin/ui/lockcreate/CreateLockViewModel.kt`
+- [X] T045 [US1] Implement create-lock Compose screen with app picker, minutes/hours/days/weeks/custom duration controls, and irreversible confirmation in `app/src/main/kotlin/com/lockin/ui/lockcreate/CreateLockScreen.kt`
+- [X] T046 [US1] Implement lock detail ViewModel with remaining time, rejected weaken actions, and extension flow in `app/src/main/kotlin/com/lockin/ui/lockdetail/LockDetailViewModel.kt`
+- [X] T047 [US1] Implement lock detail Compose screen with active status, blocked apps, remaining time, and extension controls in `app/src/main/kotlin/com/lockin/ui/lockdetail/LockDetailScreen.kt`
+- [X] T048 [US1] Wire create-lock, lock-detail, Device Owner gate, and active-lock routes into navigation in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
 
 **Checkpoint**: User Story 1 is fully functional and testable as the MVP.
 

@@ -12,8 +12,10 @@ import com.lockin.device.AndroidDeviceOwnerState
 import com.lockin.device.AndroidDevicePolicyGateway
 import com.lockin.device.DeviceOwnerState
 import com.lockin.device.DevicePolicyGateway
+import com.lockin.device.LockPolicyEnforcer
 import com.lockin.domain.appcatalog.AndroidAppCatalogScanner
 import com.lockin.domain.appcatalog.AppCatalogScanner
+import com.lockin.domain.lock.LockUseCases
 import com.lockin.domain.lock.SystemTimeProvider
 import com.lockin.domain.lock.TimeProvider
 import com.lockin.domain.repository.AppRepository
@@ -65,6 +67,25 @@ class LockinContainer(context: Context) {
 
     val statisticsRepository: StatisticsRepository by lazy {
         RoomStatisticsRepository(database, database.historyDao())
+    }
+
+    val lockPolicyEnforcer: LockPolicyEnforcer by lazy {
+        LockPolicyEnforcer(
+            lockRepository = lockRepository,
+            policyEventRepository = policyEventRepository,
+            devicePolicyGateway = devicePolicyGateway,
+            timeProvider = timeProvider
+        )
+    }
+
+    val lockUseCases: LockUseCases by lazy {
+        LockUseCases(
+            appRepository = appRepository,
+            lockRepository = lockRepository,
+            deviceOwnerState = deviceOwnerState,
+            timeProvider = timeProvider,
+            policyEnforcer = lockPolicyEnforcer
+        )
     }
 
     private companion object {

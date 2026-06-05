@@ -71,6 +71,27 @@ Expected outcome:
 - Extension cannot be reversed.
 - The locked package remains blocked without interruption.
 
+## User Story 1 Managed-Device Validation Checkpoint
+
+After tasks `T031` through `T044` are complete, automated validation covers
+duration math, irreversible state transitions, Room persistence, create-lock
+contract behavior, and create-lock ViewModel state. The following behavior still
+requires a managed Device Owner test device once `T045` through `T048` expose
+the UI routes:
+
+1. Create an active lock for one installed non-exempt app.
+2. Attempt to launch the blocked app during the active period.
+3. Attempt to reduce, pause, delete, or bypass the active lock from Lockin.
+4. Extend the active lock and verify the resulting remaining duration equals the
+   previous remaining duration plus the confirmed extension.
+
+Expected outcome:
+
+- Lock creation persists before policy application returns success.
+- Blocked launch attempts fail while the lock is active.
+- Weakening actions are unavailable or rejected.
+- Extension cannot be reversed.
+
 ## Scenario 3: Group and Mood Reuse
 
 1. Create a group named `Deep Work` with multiple installed apps.
