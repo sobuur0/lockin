@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Lockin</string>
+    <string name="device_admin_description">Required to enforce active app locks on this device.</string>
 </resources>

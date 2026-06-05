@@ -12,15 +12,15 @@
 
 **Purpose**: Create the Android project, build configuration, and base app structure described in the implementation plan.
 
-- [ ] T001 Create Gradle Android project settings in `settings.gradle.kts`
-- [ ] T002 Create root Gradle build configuration in `build.gradle.kts`
-- [ ] T003 [P] Create dependency version catalog for Kotlin, Android Gradle Plugin, Compose, Room, Lifecycle, Navigation, AndroidX Test, JUnit, and Robolectric in `gradle/libs.versions.toml`
-- [ ] T004 Create Android app module build configuration with Compose, Room, Kotlin, unit test, and instrumentation test settings in `app/build.gradle.kts`
-- [ ] T005 Create application manifest with `MainActivity`, `LockinDeviceAdminReceiver`, `BootReceiver`, and `PackageChangeReceiver` declarations in `app/src/main/AndroidManifest.xml`
-- [ ] T006 [P] Create Device Admin receiver policy XML in `app/src/main/res/xml/device_admin_receiver.xml`
-- [ ] T007 [P] Create base application class in `app/src/main/kotlin/com/lockin/LockinApp.kt`
-- [ ] T008 [P] Create base Compose activity entry point in `app/src/main/kotlin/com/lockin/MainActivity.kt`
-- [ ] T009 [P] Create black-and-white system-theme Compose theme in `app/src/main/kotlin/com/lockin/ui/app/LockinTheme.kt`
+- [X] T001 Create Gradle Android project settings in `settings.gradle.kts`
+- [X] T002 Create root Gradle build configuration in `build.gradle.kts`
+- [X] T003 [P] Create dependency version catalog for Kotlin, Android Gradle Plugin, Compose, Room, Lifecycle, Navigation, AndroidX Test, JUnit, and Robolectric in `gradle/libs.versions.toml`
+- [X] T004 Create Android app module build configuration with Compose, Room, Kotlin, unit test, and instrumentation test settings in `app/build.gradle.kts`
+- [X] T005 Create application manifest with `MainActivity`, `LockinDeviceAdminReceiver`, `BootReceiver`, and `PackageChangeReceiver` declarations in `app/src/main/AndroidManifest.xml`
+- [X] T006 [P] Create Device Admin receiver policy XML in `app/src/main/res/xml/device_admin_receiver.xml`
+- [X] T007 [P] Create base application class in `app/src/main/kotlin/com/lockin/LockinApp.kt`
+- [X] T008 [P] Create base Compose activity entry point in `app/src/main/kotlin/com/lockin/MainActivity.kt`
+- [X] T009 [P] Create black-and-white system-theme Compose theme in `app/src/main/kotlin/com/lockin/ui/app/LockinTheme.kt`
 
 ---
 
@@ -30,20 +30,20 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T010 [P] Create local application entity model in `app/src/main/kotlin/com/lockin/data/entities/ApplicationEntity.kt`
-- [ ] T011 [P] Create lock and lock application entity models in `app/src/main/kotlin/com/lockin/data/entities/LockEntities.kt`
-- [ ] T012 [P] Create group and mood entity models in `app/src/main/kotlin/com/lockin/data/entities/TemplateEntities.kt`
-- [ ] T013 [P] Create lock session and policy reconciliation entity models in `app/src/main/kotlin/com/lockin/data/entities/HistoryEntities.kt`
-- [ ] T014 Create Room DAO for applications in `app/src/main/kotlin/com/lockin/data/dao/ApplicationDao.kt`
-- [ ] T015 Create Room DAO for locks, lock applications, and lock extensions in `app/src/main/kotlin/com/lockin/data/dao/LockDao.kt`
-- [ ] T016 [P] Create Room DAO for groups and moods in `app/src/main/kotlin/com/lockin/data/dao/TemplateDao.kt`
-- [ ] T017 [P] Create Room DAO for lock sessions, statistics queries, and policy reconciliation events in `app/src/main/kotlin/com/lockin/data/dao/HistoryDao.kt`
-- [ ] T018 Create Room database wiring all entities and DAOs in `app/src/main/kotlin/com/lockin/data/db/LockinDatabase.kt`
-- [ ] T019 [P] Create monotonic and wall-clock time provider abstraction in `app/src/main/kotlin/com/lockin/domain/lock/TimeProvider.kt`
-- [ ] T020 [P] Create duration value objects and validation helpers in `app/src/main/kotlin/com/lockin/domain/lock/LockDuration.kt`
-- [ ] T021 [P] Create Device Owner state abstraction in `app/src/main/kotlin/com/lockin/device/DeviceOwnerState.kt`
-- [ ] T022 [P] Create DevicePolicyManager gateway interface and result types in `app/src/main/kotlin/com/lockin/device/DevicePolicyGateway.kt`
-- [ ] T023 Create Android DevicePolicyManager gateway implementation in `app/src/main/kotlin/com/lockin/device/AndroidDevicePolicyGateway.kt`
+- [X] T010 [P] Create local application entity model in `app/src/main/kotlin/com/lockin/data/entities/ApplicationEntity.kt`
+- [X] T011 [P] Create lock and lock application entity models in `app/src/main/kotlin/com/lockin/data/entities/LockEntities.kt`
+- [X] T012 [P] Create group and mood entity models in `app/src/main/kotlin/com/lockin/data/entities/TemplateEntities.kt`
+- [X] T013 [P] Create lock session and policy reconciliation entity models in `app/src/main/kotlin/com/lockin/data/entities/HistoryEntities.kt`
+- [X] T014 Create Room DAO for applications in `app/src/main/kotlin/com/lockin/data/dao/ApplicationDao.kt`
+- [X] T015 Create Room DAO for locks, lock applications, and lock extensions in `app/src/main/kotlin/com/lockin/data/dao/LockDao.kt`
+- [X] T016 [P] Create Room DAO for groups and moods in `app/src/main/kotlin/com/lockin/data/dao/TemplateDao.kt`
+- [X] T017 [P] Create Room DAO for lock sessions, statistics queries, and policy reconciliation events in `app/src/main/kotlin/com/lockin/data/dao/HistoryDao.kt`
+- [X] T018 Create Room database wiring all entities and DAOs in `app/src/main/kotlin/com/lockin/data/db/LockinDatabase.kt`
+- [X] T019 [P] Create monotonic and wall-clock time provider abstraction in `app/src/main/kotlin/com/lockin/domain/lock/TimeProvider.kt`
+- [X] T020 [P] Create duration value objects and validation helpers in `app/src/main/kotlin/com/lockin/domain/lock/LockDuration.kt`
+- [X] T021 [P] Create Device Owner state abstraction in `app/src/main/kotlin/com/lockin/device/DeviceOwnerState.kt`
+- [X] T022 [P] Create DevicePolicyManager gateway interface and result types in `app/src/main/kotlin/com/lockin/device/DevicePolicyGateway.kt`
+- [X] T023 Create Android DevicePolicyManager gateway implementation in `app/src/main/kotlin/com/lockin/device/AndroidDevicePolicyGateway.kt`
 - [ ] T095 Create Device Admin receiver implementation in `app/src/main/kotlin/com/lockin/device/LockinDeviceAdminReceiver.kt`
 - [ ] T024 [P] Create application catalog scanner interface and package identity model in `app/src/main/kotlin/com/lockin/domain/appcatalog/AppCatalogScanner.kt`
 - [ ] T025 Create Android package catalog scanner implementation in `app/src/main/kotlin/com/lockin/domain/appcatalog/AndroidAppCatalogScanner.kt`
