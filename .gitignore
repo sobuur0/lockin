@@ -1,0 +1,13 @@
+.DS_Store
+*.class
+*.iml
+*.jar
+*.log
+.gradle/
+.idea/
+build/
+out/
+local.properties
+android-app/.gradle/
+android-app/build/
+android-app/app/build/

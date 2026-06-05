@@ -3,10 +3,12 @@ package com.lockin.ui.app
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,10 +33,14 @@ import com.lockin.LockinApp
 import com.lockin.app.LockinContainer
 import com.lockin.ui.deviceowner.DeviceOwnerGateScreen
 import com.lockin.ui.deviceowner.DeviceOwnerGateViewModel
+import com.lockin.ui.groups.GroupsScreen
+import com.lockin.ui.groups.GroupsViewModel
 import com.lockin.ui.lockcreate.CreateLockScreen
 import com.lockin.ui.lockcreate.CreateLockViewModel
 import com.lockin.ui.lockdetail.LockDetailScreen
 import com.lockin.ui.lockdetail.LockDetailViewModel
+import com.lockin.ui.moods.MoodsScreen
+import com.lockin.ui.moods.MoodsViewModel
 
 object LockinRoutes {
     const val DEVICE_OWNER = "device-owner"
@@ -81,7 +87,9 @@ fun LockinNavGraph(
         }
         composable(LockinRoutes.HOME) {
             HomeScreen(
-                onCreateLock = { navController.navigate(LockinRoutes.CREATE_LOCK) }
+                onCreateLock = { navController.navigate(LockinRoutes.CREATE_LOCK) },
+                onGroups = { navController.navigate(LockinRoutes.GROUPS) },
+                onMoods = { navController.navigate(LockinRoutes.MOODS) }
             )
         }
         composable(LockinRoutes.CREATE_LOCK) {
@@ -138,10 +146,62 @@ fun LockinNavGraph(
             )
         }
         composable(LockinRoutes.GROUPS) {
-            PlaceholderScreen(title = "Groups")
+            val viewModel: GroupsViewModel = viewModel(
+                factory = lockinViewModelFactory {
+                    GroupsViewModel(
+                        appRepository = container.appRepository,
+                        templateRepository = container.templateRepository,
+                        templateUseCases = container.templateUseCases
+                    )
+                }
+            )
+            val state by viewModel.uiState.collectAsState()
+            GroupsScreen(
+                state = state,
+                onNameChange = viewModel::setName,
+                onToggleApp = viewModel::toggleApp,
+                onSaveGroup = viewModel::saveGroup,
+                onEditGroup = viewModel::editGroup,
+                onArchiveGroup = viewModel::archiveGroup,
+                onClearEditor = viewModel::clearEditor,
+                onStartDurationAmountChange = viewModel::setStartDurationAmount,
+                onStartDurationUnitChange = viewModel::setStartDurationUnit,
+                onStartConfirmationChange = viewModel::setStartConfirmationAccepted,
+                onStartGroup = viewModel::startGroup,
+                onLockStarted = { lockId ->
+                    navController.navigate(LockinRoutes.lockDetail(lockId))
+                }
+            )
         }
         composable(LockinRoutes.MOODS) {
-            PlaceholderScreen(title = "Moods")
+            val viewModel: MoodsViewModel = viewModel(
+                factory = lockinViewModelFactory {
+                    MoodsViewModel(
+                        appRepository = container.appRepository,
+                        templateRepository = container.templateRepository,
+                        templateUseCases = container.templateUseCases
+                    )
+                }
+            )
+            val state by viewModel.uiState.collectAsState()
+            MoodsScreen(
+                state = state,
+                onNameChange = viewModel::setName,
+                onToggleApp = viewModel::toggleApp,
+                onDefaultDurationAmountChange = viewModel::setDefaultDurationAmount,
+                onDefaultDurationUnitChange = viewModel::setDefaultDurationUnit,
+                onSaveMood = viewModel::saveMood,
+                onEditMood = viewModel::editMood,
+                onArchiveMood = viewModel::archiveMood,
+                onClearEditor = viewModel::clearEditor,
+                onStartDurationAmountChange = viewModel::setStartDurationAmount,
+                onStartDurationUnitChange = viewModel::setStartDurationUnit,
+                onStartConfirmationChange = viewModel::setStartConfirmationAccepted,
+                onStartMood = viewModel::startMood,
+                onLockStarted = { lockId ->
+                    navController.navigate(LockinRoutes.lockDetail(lockId))
+                }
+            )
         }
         composable(LockinRoutes.STATS) {
             PlaceholderScreen(title = "Statistics")
@@ -151,7 +211,9 @@ fun LockinNavGraph(
 
 @Composable
 private fun HomeScreen(
-    onCreateLock: () -> Unit
+    onCreateLock: () -> Unit,
+    onGroups: () -> Unit,
+    onMoods: () -> Unit
 ) {
     Scaffold { paddingValues ->
         Column(
@@ -170,6 +232,23 @@ private fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Create Lock")
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onGroups,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Groups")
+                }
+                OutlinedButton(
+                    onClick = onMoods,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Moods")
+                }
             }
         }
     }

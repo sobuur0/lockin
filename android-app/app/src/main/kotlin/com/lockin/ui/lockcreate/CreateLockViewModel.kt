@@ -3,6 +3,7 @@ package com.lockin.ui.lockcreate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lockin.data.entities.ApplicationEntity
+import com.lockin.data.entities.LockSourceType
 import com.lockin.domain.appcatalog.AppCatalogScanner
 import com.lockin.domain.lock.CreateLockRequest
 import com.lockin.domain.lock.LockDuration
@@ -52,6 +53,8 @@ class CreateLockViewModel(
     private val extendedLockId = MutableStateFlow<Long?>(null)
     private val resultingRemainingDuration = MutableStateFlow<Long?>(null)
     private val errorMessage = MutableStateFlow<String?>(null)
+    private val sourceType = MutableStateFlow(LockSourceType.MANUAL)
+    private val sourceId = MutableStateFlow<Long?>(null)
 
     val uiState: StateFlow<CreateLockUiState> = combine(
         appRepository.observeLockableInstalledApps(),
@@ -139,6 +142,23 @@ class CreateLockViewModel(
         errorMessage.value = null
     }
 
+    fun applyTemplateSelection(
+        packageIds: Set<String>,
+        templateSourceType: LockSourceType,
+        templateSourceId: Long,
+        defaultDurationMillis: Long? = null
+    ) {
+        selectedPackageIds.value = packageIds
+        sourceType.value = templateSourceType
+        sourceId.value = templateSourceId
+        defaultDurationMillis?.let { millis ->
+            durationAmount.value = millis.toString()
+            durationUnit.value = LockDurationUnit.CUSTOM
+        }
+        confirmationAccepted.value = false
+        errorMessage.value = null
+    }
+
     fun createLock() {
         val duration = validatedDuration(
             requireSelection = true
@@ -151,7 +171,9 @@ class CreateLockViewModel(
                 val result = lockUseCases.createLock(
                     CreateLockRequest(
                         packageIds = selectedPackageIds.value,
-                        duration = duration
+                        duration = duration,
+                        sourceType = sourceType.value,
+                        sourceId = sourceId.value
                     )
                 )
             ) {

@@ -63,6 +63,7 @@ class FakeDeviceOwnerState(
 
 class FakePolicyEnforcer : ActiveLockPolicyEnforcer {
     val triggers = mutableListOf<PolicyReconciliationTrigger>()
+    val releasedPackageIds = mutableListOf<Set<String>>()
 
     override suspend fun enforceActiveLocks(
         trigger: PolicyReconciliationTrigger
@@ -71,6 +72,20 @@ class FakePolicyEnforcer : ActiveLockPolicyEnforcer {
         return LockPolicyEnforcementSummary(
             trigger = trigger,
             packageCount = 0,
+            blockedPackageIds = emptySet(),
+            failedPackageIds = emptySet(),
+            deviceOwnerMissing = false
+        )
+    }
+
+    override suspend fun releasePackages(
+        packageIds: Set<String>,
+        trigger: PolicyReconciliationTrigger
+    ): LockPolicyEnforcementSummary {
+        releasedPackageIds += packageIds
+        return LockPolicyEnforcementSummary(
+            trigger = trigger,
+            packageCount = packageIds.size,
             blockedPackageIds = emptySet(),
             failedPackageIds = emptySet(),
             deviceOwnerMissing = false
@@ -187,19 +202,83 @@ class FakePolicyEventRepository : PolicyEventRepository {
 }
 
 class FakeTemplateRepository : TemplateRepository {
-    override fun observeGroups(): Flow<List<LockGroupWithApplications>> = emptyFlow()
-    override fun observeMoods(): Flow<List<MoodWithApplications>> = emptyFlow()
-    override suspend fun getGroup(groupId: Long): LockGroupWithApplications? = null
-    override suspend fun getMood(moodId: Long): MoodWithApplications? = null
+    private val groups = mutableMapOf<Long, LockGroupEntity>()
+    private val groupApplications = mutableMapOf<Long, List<LockGroupApplicationEntity>>()
+    private val moods = mutableMapOf<Long, MoodEntity>()
+    private val moodApplications = mutableMapOf<Long, List<MoodApplicationEntity>>()
+    private val groupsFlow = MutableStateFlow<List<LockGroupWithApplications>>(emptyList())
+    private val moodsFlow = MutableStateFlow<List<MoodWithApplications>>(emptyList())
+    private var nextGroupId = 1L
+    private var nextMoodId = 1L
+
+    override fun observeGroups(): Flow<List<LockGroupWithApplications>> = groupsFlow
+    override fun observeMoods(): Flow<List<MoodWithApplications>> = moodsFlow
+
+    override suspend fun getGroup(groupId: Long): LockGroupWithApplications? =
+        groups[groupId]?.let { group ->
+            LockGroupWithApplications(
+                group = group,
+                applications = groupApplications[groupId].orEmpty()
+            )
+        }
+
+    override suspend fun getMood(moodId: Long): MoodWithApplications? =
+        moods[moodId]?.let { mood ->
+            MoodWithApplications(
+                mood = mood,
+                applications = moodApplications[moodId].orEmpty()
+            )
+        }
+
     override suspend fun saveGroup(
         group: LockGroupEntity,
         applications: List<LockGroupApplicationEntity>
-    ): Long = group.id
+    ): Long {
+        val id = if (group.id == 0L) nextGroupId++ else group.id
+        groups[id] = group.copy(id = id)
+        groupApplications[id] = applications
+            .distinctBy { it.packageId }
+            .map { it.copy(groupId = id) }
+        emitGroups()
+        return id
+    }
 
     override suspend fun saveMood(
         mood: MoodEntity,
         applications: List<MoodApplicationEntity>
-    ): Long = mood.id
+    ): Long {
+        val id = if (mood.id == 0L) nextMoodId++ else mood.id
+        moods[id] = mood.copy(id = id)
+        moodApplications[id] = applications
+            .distinctBy { it.packageId }
+            .map { it.copy(moodId = id) }
+        emitMoods()
+        return id
+    }
+
+    private fun emitGroups() {
+        groupsFlow.value = groups.values
+            .filterNot { it.isArchived }
+            .sortedBy { it.name.lowercase() }
+            .map { group ->
+                LockGroupWithApplications(
+                    group = group,
+                    applications = groupApplications[group.id].orEmpty()
+                )
+            }
+    }
+
+    private fun emitMoods() {
+        moodsFlow.value = moods.values
+            .filterNot { it.isArchived }
+            .sortedBy { it.name.lowercase() }
+            .map { mood ->
+                MoodWithApplications(
+                    mood = mood,
+                    applications = moodApplications[mood.id].orEmpty()
+                )
+            }
+    }
 }
 
 class FakeStatisticsRepository : StatisticsRepository {

@@ -16,8 +16,10 @@ import com.lockin.device.LockPolicyEnforcer
 import com.lockin.domain.appcatalog.AndroidAppCatalogScanner
 import com.lockin.domain.appcatalog.AppCatalogScanner
 import com.lockin.domain.lock.LockUseCases
+import com.lockin.domain.lock.LockExpirationReconciler
 import com.lockin.domain.lock.SystemTimeProvider
 import com.lockin.domain.lock.TimeProvider
+import com.lockin.domain.templates.TemplateUseCases
 import com.lockin.domain.repository.AppRepository
 import com.lockin.domain.repository.LockRepository
 import com.lockin.domain.repository.PolicyEventRepository
@@ -85,6 +87,23 @@ class LockinContainer(context: Context) {
             deviceOwnerState = deviceOwnerState,
             timeProvider = timeProvider,
             policyEnforcer = lockPolicyEnforcer
+        )
+    }
+
+    val templateUseCases: TemplateUseCases by lazy {
+        TemplateUseCases(
+            appRepository = appRepository,
+            templateRepository = templateRepository,
+            lockUseCases = lockUseCases,
+            timeProvider = timeProvider
+        )
+    }
+
+    val lockExpirationReconciler: LockExpirationReconciler by lazy {
+        LockExpirationReconciler(
+            lockRepository = lockRepository,
+            policyEnforcer = lockPolicyEnforcer,
+            timeProvider = timeProvider
         )
     }
 

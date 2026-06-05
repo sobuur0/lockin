@@ -99,20 +99,20 @@
 
 ### Verification for User Story 2
 
-- [ ] T049 [P] [US2] Add Room integration tests for group and mood persistence and app membership uniqueness in `app/src/test/kotlin/com/lockin/data/TemplateRepositoryTest.kt`
-- [ ] T050 [P] [US2] Add unit tests proving group and mood edits do not mutate active locks in `app/src/test/kotlin/com/lockin/domain/templates/TemplateUseCasesTest.kt`
-- [ ] T051 [P] [US2] Add contract tests for group and mood behavior in `app/src/test/kotlin/com/lockin/contracts/GroupsAndMoodsContractTest.kt`
-- [ ] T052 [P] [US2] Add ViewModel tests for group creation, mood creation, and start-from-template flows in `app/src/test/kotlin/com/lockin/ui/templates/TemplatesViewModelTest.kt`
+- [X] T049 [P] [US2] Add Room integration tests for group and mood persistence and app membership uniqueness in `app/src/test/kotlin/com/lockin/data/TemplateRepositoryTest.kt`
+- [X] T050 [P] [US2] Add unit tests proving group and mood edits do not mutate active locks in `app/src/test/kotlin/com/lockin/domain/templates/TemplateUseCasesTest.kt`
+- [X] T051 [P] [US2] Add contract tests for group and mood behavior in `app/src/test/kotlin/com/lockin/contracts/GroupsAndMoodsContractTest.kt`
+- [X] T052 [P] [US2] Add ViewModel tests for group creation, mood creation, and start-from-template flows in `app/src/test/kotlin/com/lockin/ui/templates/TemplatesViewModelTest.kt`
 
 ### Implementation for User Story 2
 
-- [ ] T053 [P] [US2] Implement group domain model and validation rules in `app/src/main/kotlin/com/lockin/domain/groups/LockGroup.kt`
-- [ ] T054 [P] [US2] Implement mood domain model and validation rules in `app/src/main/kotlin/com/lockin/domain/moods/Mood.kt`
-- [ ] T055 [US2] Implement group and mood use cases for create, edit, archive, and start lock from template in `app/src/main/kotlin/com/lockin/domain/templates/TemplateUseCases.kt`
-- [ ] T056 [US2] Implement groups ViewModel and screen for group list, group edit, and app membership selection in `app/src/main/kotlin/com/lockin/ui/groups/GroupsScreen.kt`
-- [ ] T057 [US2] Implement moods ViewModel and screen for mood list, mood edit, app membership, and optional default duration in `app/src/main/kotlin/com/lockin/ui/moods/MoodsScreen.kt`
-- [ ] T058 [US2] Integrate start-from-group and start-from-mood flows with lock creation use cases in `app/src/main/kotlin/com/lockin/ui/lockcreate/CreateLockViewModel.kt`
-- [ ] T059 [US2] Add groups and moods navigation destinations and entry actions in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
+- [X] T053 [P] [US2] Implement group domain model and validation rules in `app/src/main/kotlin/com/lockin/domain/groups/LockGroup.kt`
+- [X] T054 [P] [US2] Implement mood domain model and validation rules in `app/src/main/kotlin/com/lockin/domain/moods/Mood.kt`
+- [X] T055 [US2] Implement group and mood use cases for create, edit, archive, and start lock from template in `app/src/main/kotlin/com/lockin/domain/templates/TemplateUseCases.kt`
+- [X] T056 [US2] Implement groups ViewModel and screen for group list, group edit, and app membership selection in `app/src/main/kotlin/com/lockin/ui/groups/GroupsScreen.kt`
+- [X] T057 [US2] Implement moods ViewModel and screen for mood list, mood edit, app membership, and optional default duration in `app/src/main/kotlin/com/lockin/ui/moods/MoodsScreen.kt`
+- [X] T058 [US2] Integrate start-from-group and start-from-mood flows with lock creation use cases in `app/src/main/kotlin/com/lockin/ui/lockcreate/CreateLockViewModel.kt`
+- [X] T059 [US2] Add groups and moods navigation destinations and entry actions in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
 
 **Checkpoint**: User Story 2 works independently after foundational tasks and can create active locks from reusable templates.
 
@@ -137,12 +137,12 @@
 ### Implementation for User Story 3
 
 - [ ] T066 [P] [US3] Implement package reconciliation trigger enum and policy result mapping in `app/src/main/kotlin/com/lockin/device/PolicyReconciliation.kt`
-- [ ] T067 [US3] Extend lock policy enforcer with hide, suspend, uninstall-block, release, overlap, and fail-closed behavior in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
+- [X] T067 [US3] Extend lock policy enforcer with hide, suspend, uninstall-block, release, overlap, and fail-closed behavior in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
 - [ ] T068 [US3] Implement boot receiver to reconcile active locks before normal use after reboot in `app/src/main/kotlin/com/lockin/device/BootReceiver.kt`
 - [ ] T069 [US3] Implement package change receiver for installed, changed, replaced, and removed package events in `app/src/main/kotlin/com/lockin/device/PackageChangeReceiver.kt`
-- [ ] T070 [US3] Implement app startup reconciliation in `app/src/main/kotlin/com/lockin/LockinApp.kt`
+- [X] T070 [US3] Implement app startup reconciliation in `app/src/main/kotlin/com/lockin/LockinApp.kt`
 - [ ] T071 [US3] Implement date, time, and time-zone configuration restriction handling during active locks in `app/src/main/kotlin/com/lockin/device/TimeRestrictionPolicy.kt`
-- [ ] T072 [US3] Implement active-lock expiration reconciliation and release of packages only when no active lock covers the package identifier in `app/src/main/kotlin/com/lockin/domain/lock/LockExpirationReconciler.kt`
+- [X] T072 [US3] Implement active-lock expiration reconciliation and release of packages only when no active lock covers the package identifier in `app/src/main/kotlin/com/lockin/domain/lock/LockExpirationReconciler.kt`
 - [ ] T097 [US3] Implement local lock expiration scheduling and trigger wiring in `app/src/main/kotlin/com/lockin/domain/lock/LockExpirationScheduler.kt`
 - [ ] T073 [US3] Add local policy reconciliation event recording to all enforcement triggers in `app/src/main/kotlin/com/lockin/device/LockPolicyEnforcer.kt`
 

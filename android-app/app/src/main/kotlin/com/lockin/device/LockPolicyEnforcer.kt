@@ -20,6 +20,11 @@ interface ActiveLockPolicyEnforcer {
     suspend fun enforceActiveLocks(
         trigger: PolicyReconciliationTrigger
     ): LockPolicyEnforcementSummary
+
+    suspend fun releasePackages(
+        packageIds: Set<String>,
+        trigger: PolicyReconciliationTrigger
+    ): LockPolicyEnforcementSummary
 }
 
 class LockPolicyEnforcer(
@@ -91,6 +96,79 @@ class LockPolicyEnforcer(
             trigger = trigger,
             packageCount = activePackageIds.size,
             blockedPackageIds = activePackageIds - failedPackageIds,
+            failedPackageIds = failedPackageIds,
+            deviceOwnerMissing = false
+        )
+    }
+
+    override suspend fun releasePackages(
+        packageIds: Set<String>,
+        trigger: PolicyReconciliationTrigger
+    ): LockPolicyEnforcementSummary {
+        if (packageIds.isEmpty()) {
+            return LockPolicyEnforcementSummary(
+                trigger = trigger,
+                packageCount = 0,
+                blockedPackageIds = emptySet(),
+                failedPackageIds = emptySet(),
+                deviceOwnerMissing = false
+            )
+        }
+
+        if (!devicePolicyGateway.isDeviceOwner()) {
+            record(
+                trigger = trigger,
+                packageId = null,
+                result = PolicyReconciliationResult.DEVICE_OWNER_MISSING,
+                message = "Device Owner status is required before lock policies can be released."
+            )
+            return LockPolicyEnforcementSummary(
+                trigger = trigger,
+                packageCount = packageIds.size,
+                blockedPackageIds = emptySet(),
+                failedPackageIds = packageIds,
+                deviceOwnerMissing = true
+            )
+        }
+
+        val failedPackageIds = mutableSetOf<String>()
+        val suspension = devicePolicyGateway.setPackagesSuspended(packageIds, suspended = false)
+        failedPackageIds += suspension.failedPackageIds
+        if (suspension.result.isFailure()) {
+            failedPackageIds += packageIds
+        }
+
+        packageIds.forEach { packageId ->
+            if (devicePolicyGateway.setApplicationHidden(packageId, hidden = false).isFailure()) {
+                failedPackageIds += packageId
+            }
+            if (devicePolicyGateway.setUninstallBlocked(packageId, blocked = false).isFailure()) {
+                failedPackageIds += packageId
+            }
+        }
+
+        packageIds.forEach { packageId ->
+            val failed = packageId in failedPackageIds
+            record(
+                trigger = trigger,
+                packageId = packageId,
+                result = if (failed) {
+                    PolicyReconciliationResult.FAILED_CLOSED
+                } else {
+                    PolicyReconciliationResult.APPLIED
+                },
+                message = if (failed) {
+                    "Expired lock policy release failed; package may remain blocked."
+                } else {
+                    "Expired lock policy released."
+                }
+            )
+        }
+
+        return LockPolicyEnforcementSummary(
+            trigger = trigger,
+            packageCount = packageIds.size,
+            blockedPackageIds = emptySet(),
             failedPackageIds = failedPackageIds,
             deviceOwnerMissing = false
         )
