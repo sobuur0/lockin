@@ -236,3 +236,44 @@ Expected outcome:
 - Date/time configuration is restricted where Device Owner policy supports it.
 - Manual clock changes do not shorten the active lock.
 - Lock remains active for at least the full confirmed duration.
+
+## Phase 7 Verification Evidence
+
+Recorded on 2026-06-05 from `/Users/mac/development/lockin/android-app`.
+
+Automated verification:
+
+```bash
+./gradlew --no-configuration-cache :app:testDebugUnitTest
+./gradlew --no-configuration-cache :app:assembleDebug
+./gradlew --no-configuration-cache :app:verifySourceFormatting
+./gradlew --no-configuration-cache :app:lintDebug
+./gradlew --no-configuration-cache :app:connectedDebugAndroidTest
+```
+
+Result:
+
+- Unit tests passed, including privacy guard, UI copy guard, and statistics performance fixture over 10,000 completed sessions.
+- Debug APK assembly passed.
+- Source formatting check passed.
+- Android lint passed with warnings treated as errors, excluding time-based dependency-version checks.
+- Connected instrumentation tests passed on `emulator-5554`.
+
+Managed device evidence:
+
+```bash
+adb shell dpm list-owners
+```
+
+Result:
+
+```text
+1 owner:
+User  0: admin=com.lockin/.device.LockinDeviceAdminReceiver,DeviceOwner,Affiliated
+```
+
+The connected test run reported `DELETE_FAILED_DEVICE_POLICY_MANAGER` while uninstalling the test APK after completion. That is expected on this managed emulator because Lockin is currently Device Owner; the test task still completed successfully.
+
+Full manual quickstart scenario sweep:
+
+- Pending a manual pass through every scenario in this document on the managed test device.

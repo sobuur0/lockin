@@ -376,7 +376,7 @@ fun MoodsScreen(
                         value = state.startDurationAmount,
                         onValueChange = onStartDurationAmountChange,
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Override duration") },
+                        label = { Text("Custom duration") },
                         singleLine = true
                     )
                     DurationUnitRow(

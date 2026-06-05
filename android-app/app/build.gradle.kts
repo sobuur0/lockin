@@ -1,3 +1,5 @@
+import org.gradle.api.GradleException
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -42,6 +44,18 @@ android {
             isIncludeAndroidResources = true
         }
     }
+    lint {
+        abortOnError = true
+        checkDependencies = true
+        checkReleaseBuilds = true
+        warningsAsErrors = true
+        disable += setOf(
+            "AndroidGradlePluginVersion",
+            "GradleDependency",
+            "NewerVersionAvailable",
+            "OldTargetApi"
+        )
+    }
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -49,6 +63,45 @@ android {
 
 kotlin {
     jvmToolchain(17)
+}
+
+val sourceQualityFiles = fileTree(projectDir) {
+    include("src/**/*.kt")
+    include("src/**/*.xml")
+    include("*.gradle.kts")
+    exclude("build/**")
+}
+
+tasks.register("verifySourceFormatting") {
+    group = "verification"
+    description = "Checks Kotlin, Android XML, and Gradle sources for formatting drift."
+    inputs.files(sourceQualityFiles)
+
+    doLast {
+        val violations = mutableListOf<String>()
+        sourceQualityFiles.files
+            .filter { it.isFile }
+            .sortedBy { it.relativeTo(projectDir).path }
+            .forEach { file ->
+                file.readLines().forEachIndexed { index, line ->
+                    if (line.endsWith(" ") || line.endsWith("\t")) {
+                        violations += "${file.relativeTo(projectDir)}:${index + 1} has trailing whitespace"
+                    }
+                    if (file.extension == "kt" && line.startsWith("\t")) {
+                        violations += "${file.relativeTo(projectDir)}:${index + 1} uses tab indentation"
+                    }
+                }
+            }
+
+        if (violations.isNotEmpty()) {
+            throw GradleException(violations.joinToString(separator = "\n"))
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn("lintDebug")
+    dependsOn("verifySourceFormatting")
 }
 
 dependencies {

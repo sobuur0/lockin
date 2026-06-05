@@ -182,14 +182,14 @@
 
 **Purpose**: Harden quality gates, documentation, performance, privacy, and end-to-end validation across all stories.
 
-- [ ] T086 [P] Add project README with Device Owner provisioning, offline-only scope, and accepted factory-reset recovery in `README.md`
-- [ ] T087 [P] Add static analysis and formatting configuration for Kotlin and Android sources in `app/build.gradle.kts`
-- [ ] T088 [P] Add privacy guard test that fails if analytics, account, network, VPN, website-blocking, or remote-management dependencies are introduced in `app/src/test/kotlin/com/lockin/privacy/NoNetworkOrAnalyticsDependencyTest.kt`
-- [ ] T089 [P] Add UI copy review test for no coaching, screen-time, parental-control, emergency unlock, recovery PIN, pause, temporary bypass, or override wording in `app/src/test/kotlin/com/lockin/ui/copy/ProductBoundaryCopyTest.kt`
-- [ ] T090 Add performance test or benchmark fixture for statistics queries over 10,000 completed sessions in `app/src/test/kotlin/com/lockin/performance/StatisticsPerformanceTest.kt`
-- [ ] T091 Run `./gradlew :app:testDebugUnitTest` and record verification result in `specs/001-android-app-locks/quickstart.md`
-- [ ] T092 Run `./gradlew :app:assembleDebug` and record verification result in `specs/001-android-app-locks/quickstart.md`
-- [ ] T093 Run `./gradlew :app:connectedDebugAndroidTest` on a Device Owner test device and record verification result in `specs/001-android-app-locks/quickstart.md`
+- [X] T086 [P] Add project README with Device Owner provisioning, offline-only scope, and accepted factory-reset recovery in `README.md`
+- [X] T087 [P] Add static analysis and formatting configuration for Kotlin and Android sources in `app/build.gradle.kts`
+- [X] T088 [P] Add privacy guard test that fails if analytics, account, network, VPN, website-blocking, or remote-management dependencies are introduced in `app/src/test/kotlin/com/lockin/privacy/NoNetworkOrAnalyticsDependencyTest.kt`
+- [X] T089 [P] Add UI copy review test for no coaching, screen-time, parental-control, emergency unlock, recovery PIN, pause, temporary bypass, or override wording in `app/src/test/kotlin/com/lockin/ui/copy/ProductBoundaryCopyTest.kt`
+- [X] T090 Add performance test or benchmark fixture for statistics queries over 10,000 completed sessions in `app/src/test/kotlin/com/lockin/performance/StatisticsPerformanceTest.kt`
+- [X] T091 Run `./gradlew :app:testDebugUnitTest` and record verification result in `specs/001-android-app-locks/quickstart.md`
+- [X] T092 Run `./gradlew :app:assembleDebug` and record verification result in `specs/001-android-app-locks/quickstart.md`
+- [X] T093 Run `./gradlew :app:connectedDebugAndroidTest` on a Device Owner test device and record verification result in `specs/001-android-app-locks/quickstart.md`
 - [ ] T094 Complete all quickstart managed-device scenarios and record final evidence in `specs/001-android-app-locks/quickstart.md`
 
 ---
