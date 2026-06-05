@@ -1,13 +1,15 @@
 package com.lockin.ui.deviceowner
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -28,23 +30,26 @@ fun DeviceOwnerGateScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+            .padding(horizontal = 24.dp, vertical = 32.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         Text(
             text = "Lockin",
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.SemiBold
         )
         Text(
-            text = "Device Owner required",
-            style = MaterialTheme.typography.titleLarge
+            text = "Committed app locks for managed devices.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         StatusPanel(
             title = if (state.isDeviceOwner) "Ready" else "Setup incomplete",
             body = if (state.isDeviceOwner) {
-                "Device Owner is active for ${state.packageName}."
+                "Lockin is ready on this device."
             } else {
                 state.guidance
             }
@@ -60,21 +65,17 @@ fun DeviceOwnerGateScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "Provisioning",
+                    text = "Commitment boundary",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "On a fresh test device, install the debug build and set Device Owner with adb:",
+                    text = "You cannot cancel or shorten a lock after starting it.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "adb shell dpm set-device-owner com.lockin/.device.LockinDeviceAdminReceiver",
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = "Factory reset or device wipe is the recovery path for active locks.",
+                    text = "Locked apps return when the timer ends.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

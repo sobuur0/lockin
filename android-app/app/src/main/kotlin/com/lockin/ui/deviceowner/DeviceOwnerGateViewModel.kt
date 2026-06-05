@@ -15,7 +15,7 @@ data class DeviceOwnerGateUiState(
 ) {
     companion object {
         const val DEVICE_OWNER_GUIDANCE =
-            "Lockin requires Android Device Owner status before locks can be created or viewed."
+            "This device has not been set up for Lockin yet."
     }
 }
 
@@ -33,9 +33,9 @@ class DeviceOwnerGateViewModel(
         )
         _uiState.value = nextState.copy(
             lastVerificationMessage = if (nextState.isDeviceOwner) {
-                "Device Owner verified."
+                "Setup verified."
             } else {
-                "Device Owner is still not active."
+                "Setup is still incomplete."
             }
         )
     }
