@@ -39,6 +39,9 @@ interface LockDao {
     @Query("SELECT * FROM locks WHERE id = :lockId")
     suspend fun getLock(lockId: Long): LockEntity?
 
+    @Query("SELECT * FROM locks ORDER BY createdAtWallTime DESC")
+    fun observeAllLocks(): Flow<List<LockEntity>>
+
     @Transaction
     @Query("SELECT * FROM locks WHERE id = :lockId")
     suspend fun getLockWithApplications(lockId: Long): LockWithApplications?

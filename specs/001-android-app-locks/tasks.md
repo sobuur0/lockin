@@ -44,14 +44,14 @@
 - [X] T021 [P] Create Device Owner state abstraction in `app/src/main/kotlin/com/lockin/device/DeviceOwnerState.kt`
 - [X] T022 [P] Create DevicePolicyManager gateway interface and result types in `app/src/main/kotlin/com/lockin/device/DevicePolicyGateway.kt`
 - [X] T023 Create Android DevicePolicyManager gateway implementation in `app/src/main/kotlin/com/lockin/device/AndroidDevicePolicyGateway.kt`
-- [ ] T095 Create Device Admin receiver implementation in `app/src/main/kotlin/com/lockin/device/LockinDeviceAdminReceiver.kt`
-- [ ] T024 [P] Create application catalog scanner interface and package identity model in `app/src/main/kotlin/com/lockin/domain/appcatalog/AppCatalogScanner.kt`
-- [ ] T025 Create Android package catalog scanner implementation in `app/src/main/kotlin/com/lockin/domain/appcatalog/AndroidAppCatalogScanner.kt`
-- [ ] T026 Create repository interfaces for locks, templates, apps, policy events, and statistics in `app/src/main/kotlin/com/lockin/domain/repository/Repositories.kt`
-- [ ] T027 Create Room-backed repositories for locks, templates, apps, policy events, and statistics in `app/src/main/kotlin/com/lockin/data/repository/RoomRepositories.kt`
-- [ ] T028 Create dependency container for database, repositories, policy gateway, app scanner, and time provider in `app/src/main/kotlin/com/lockin/app/LockinContainer.kt`
-- [ ] T029 Create root navigation graph for Device Owner gate, home, create lock, lock detail, groups, moods, and statistics in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
-- [ ] T030 [P] Create base UI components for app rows, duration input, confirmation copy, active lock cards, and empty states in `app/src/main/kotlin/com/lockin/ui/app/Components.kt`
+- [X] T095 Create Device Admin receiver implementation in `app/src/main/kotlin/com/lockin/device/LockinDeviceAdminReceiver.kt`
+- [X] T024 [P] Create application catalog scanner interface and package identity model in `app/src/main/kotlin/com/lockin/domain/appcatalog/AppCatalogScanner.kt`
+- [X] T025 Create Android package catalog scanner implementation in `app/src/main/kotlin/com/lockin/domain/appcatalog/AndroidAppCatalogScanner.kt`
+- [X] T026 Create repository interfaces for locks, templates, apps, policy events, and statistics in `app/src/main/kotlin/com/lockin/domain/repository/Repositories.kt`
+- [X] T027 Create Room-backed repositories for locks, templates, apps, policy events, and statistics in `app/src/main/kotlin/com/lockin/data/repository/RoomRepositories.kt`
+- [X] T028 Create dependency container for database, repositories, policy gateway, app scanner, and time provider in `app/src/main/kotlin/com/lockin/app/LockinContainer.kt`
+- [X] T029 Create root navigation graph for Device Owner gate, home, create lock, lock detail, groups, moods, and statistics in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
+- [X] T030 [P] Create base UI components for app rows, duration input, confirmation copy, active lock cards, and empty states in `app/src/main/kotlin/com/lockin/ui/app/Components.kt`
 
 **Checkpoint**: Foundation ready. User story implementation can now begin in priority order or in parallel by story.
 

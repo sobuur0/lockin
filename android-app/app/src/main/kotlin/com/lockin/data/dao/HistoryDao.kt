@@ -89,4 +89,7 @@ interface HistoryDao {
 
     @Query("SELECT * FROM policy_reconciliation_events ORDER BY occurredAt DESC")
     fun observePolicyEvents(): Flow<List<PolicyReconciliationEventEntity>>
+
+    @Query("SELECT * FROM policy_reconciliation_events ORDER BY occurredAt DESC LIMIT :limit")
+    fun observeRecentPolicyEvents(limit: Int): Flow<List<PolicyReconciliationEventEntity>>
 }
