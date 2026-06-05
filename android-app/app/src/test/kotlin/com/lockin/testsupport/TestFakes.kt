@@ -282,15 +282,72 @@ class FakeTemplateRepository : TemplateRepository {
 }
 
 class FakeStatisticsRepository : StatisticsRepository {
-    override fun observeSessions(): Flow<List<LockSessionEntity>> = emptyFlow()
-    override fun observeTotals(): Flow<StatisticsTotals> = emptyFlow()
-    override fun observeMostBlockedApplications(): Flow<List<ApplicationBlockCount>> = emptyFlow()
-    override fun observeUniqueBlockedApplicationCount(): Flow<Int> = emptyFlow()
-    override fun observeMostFrequentlyUsedMood(): Flow<MoodUsageCount?> = emptyFlow()
+    private val sessions = mutableListOf<LockSessionEntity>()
+    private val sessionApplications = mutableListOf<LockSessionApplicationEntity>()
+    private val sessionsFlow = MutableStateFlow<List<LockSessionEntity>>(emptyList())
+    private val totalsFlow = MutableStateFlow(
+        StatisticsTotals(
+            totalLockDuration = null,
+            completedLockSessionCount = 0,
+            longestLockDuration = null,
+            averageLockDuration = null
+        )
+    )
+    private val mostBlockedApplicationsFlow =
+        MutableStateFlow<List<ApplicationBlockCount>>(emptyList())
+    private val uniqueBlockedApplicationCountFlow = MutableStateFlow(0)
+    private val mostFrequentlyUsedMoodFlow = MutableStateFlow<MoodUsageCount?>(null)
+
+    override fun observeSessions(): Flow<List<LockSessionEntity>> = sessionsFlow
+    override fun observeTotals(): Flow<StatisticsTotals> = totalsFlow
+    override fun observeMostBlockedApplications(): Flow<List<ApplicationBlockCount>> =
+        mostBlockedApplicationsFlow
+
+    override fun observeUniqueBlockedApplicationCount(): Flow<Int> =
+        uniqueBlockedApplicationCountFlow
+
+    override fun observeMostFrequentlyUsedMood(): Flow<MoodUsageCount?> =
+        mostFrequentlyUsedMoodFlow
+
     override suspend fun insertSession(
         session: LockSessionEntity,
         applications: List<LockSessionApplicationEntity>
-    ): Long = session.id
+    ): Long {
+        val id = if (session.id == 0L) sessions.size + 1L else session.id
+        sessions += session.copy(id = id)
+        sessionApplications += applications.map { it.copy(sessionId = id) }
+        emit()
+        return id
+    }
+
+    fun setMostBlockedApplications(applications: List<ApplicationBlockCount>) {
+        mostBlockedApplicationsFlow.value = applications
+    }
+
+    fun setUniqueBlockedApplicationCount(count: Int) {
+        uniqueBlockedApplicationCountFlow.value = count
+    }
+
+    fun setMostFrequentlyUsedMood(mood: MoodUsageCount?) {
+        mostFrequentlyUsedMoodFlow.value = mood
+    }
+
+    private fun emit() {
+        sessionsFlow.value = sessions.sortedByDescending { it.completedAtWallTime }
+        totalsFlow.value = StatisticsTotals(
+            totalLockDuration = sessions.sumOf { it.totalCommittedDuration },
+            completedLockSessionCount = sessions.size,
+            longestLockDuration = sessions.maxOfOrNull { it.totalCommittedDuration },
+            averageLockDuration = sessions
+                .takeIf { it.isNotEmpty() }
+                ?.map { it.totalCommittedDuration }
+                ?.average()
+        )
+        uniqueBlockedApplicationCountFlow.value = sessionApplications
+            .map { it.packageId }
+            .distinct()
+            .size
+    }
 }
 
 fun lockableApp(packageId: String = "com.example.blocked"): ApplicationEntity =

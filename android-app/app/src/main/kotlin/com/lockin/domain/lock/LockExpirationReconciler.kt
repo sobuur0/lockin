@@ -4,6 +4,7 @@ import com.lockin.data.entities.LockStatus
 import com.lockin.data.entities.PolicyReconciliationTrigger
 import com.lockin.device.ActiveLockPolicyEnforcer
 import com.lockin.domain.repository.LockRepository
+import com.lockin.domain.statistics.LockSessionRecorder
 import kotlinx.coroutines.flow.first
 
 data class LockExpirationReconciliationSummary(
@@ -15,7 +16,8 @@ data class LockExpirationReconciliationSummary(
 class LockExpirationReconciler(
     private val lockRepository: LockRepository,
     private val policyEnforcer: ActiveLockPolicyEnforcer,
-    private val timeProvider: TimeProvider
+    private val timeProvider: TimeProvider,
+    private val lockSessionRecorder: LockSessionRecorder? = null
 ) {
     suspend fun reconcile(
         trigger: PolicyReconciliationTrigger
@@ -35,6 +37,10 @@ class LockExpirationReconciler(
             .toSet()
 
         expiredLocks.forEach { lockWithApplications ->
+            lockSessionRecorder?.recordCompletedLock(
+                lockWithApplications = lockWithApplications,
+                completedAtWallTime = nowWall
+            )
             lockRepository.updateLock(
                 lockWithApplications.lock.copy(
                     status = LockStatus.COMPLETED,

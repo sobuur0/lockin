@@ -3,12 +3,8 @@ package com.lockin.ui.app
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,12 +31,16 @@ import com.lockin.ui.deviceowner.DeviceOwnerGateScreen
 import com.lockin.ui.deviceowner.DeviceOwnerGateViewModel
 import com.lockin.ui.groups.GroupsScreen
 import com.lockin.ui.groups.GroupsViewModel
+import com.lockin.ui.home.HomeScreen
+import com.lockin.ui.home.HomeViewModel
 import com.lockin.ui.lockcreate.CreateLockScreen
 import com.lockin.ui.lockcreate.CreateLockViewModel
 import com.lockin.ui.lockdetail.LockDetailScreen
 import com.lockin.ui.lockdetail.LockDetailViewModel
 import com.lockin.ui.moods.MoodsScreen
 import com.lockin.ui.moods.MoodsViewModel
+import com.lockin.ui.stats.StatsScreen
+import com.lockin.ui.stats.StatsViewModel
 
 object LockinRoutes {
     const val DEVICE_OWNER = "device-owner"
@@ -86,10 +86,23 @@ fun LockinNavGraph(
             )
         }
         composable(LockinRoutes.HOME) {
+            val viewModel: HomeViewModel = viewModel(
+                factory = lockinViewModelFactory {
+                    HomeViewModel(
+                        lockRepository = container.lockRepository,
+                        appRepository = container.appRepository,
+                        timeProvider = container.timeProvider
+                    )
+                }
+            )
+            val state by viewModel.uiState.collectAsState()
             HomeScreen(
+                state = state,
                 onCreateLock = { navController.navigate(LockinRoutes.CREATE_LOCK) },
                 onGroups = { navController.navigate(LockinRoutes.GROUPS) },
-                onMoods = { navController.navigate(LockinRoutes.MOODS) }
+                onMoods = { navController.navigate(LockinRoutes.MOODS) },
+                onStats = { navController.navigate(LockinRoutes.STATS) },
+                onLockSelected = { lockId -> navController.navigate(LockinRoutes.lockDetail(lockId)) }
             )
         }
         composable(LockinRoutes.CREATE_LOCK) {
@@ -204,52 +217,13 @@ fun LockinNavGraph(
             )
         }
         composable(LockinRoutes.STATS) {
-            PlaceholderScreen(title = "Statistics")
-        }
-    }
-}
-
-@Composable
-private fun HomeScreen(
-    onCreateLock: () -> Unit,
-    onGroups: () -> Unit,
-    onMoods: () -> Unit
-) {
-    Scaffold { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text(
-                text = "Lockin",
-                style = MaterialTheme.typography.headlineSmall
+            val viewModel: StatsViewModel = viewModel(
+                factory = lockinViewModelFactory {
+                    StatsViewModel(container.statisticsRepository)
+                }
             )
-            Button(
-                onClick = onCreateLock,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Create Lock")
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = onGroups,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Groups")
-                }
-                OutlinedButton(
-                    onClick = onMoods,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Moods")
-                }
-            }
+            val state by viewModel.uiState.collectAsState()
+            StatsScreen(state = state)
         }
     }
 }

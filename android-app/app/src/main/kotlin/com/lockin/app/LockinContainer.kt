@@ -30,6 +30,7 @@ import com.lockin.domain.repository.PolicyEventRepository
 import com.lockin.domain.repository.StatisticsRepository
 import com.lockin.domain.repository.TemplateRepository
 import com.lockin.data.entities.PolicyReconciliationTrigger
+import com.lockin.domain.statistics.LockSessionRecorder
 import kotlinx.coroutines.CoroutineScope
 
 class LockinContainer(
@@ -133,8 +134,13 @@ class LockinContainer(
         LockExpirationReconciler(
             lockRepository = lockRepository,
             policyEnforcer = lockPolicyEnforcer,
-            timeProvider = timeProvider
+            timeProvider = timeProvider,
+            lockSessionRecorder = lockSessionRecorder
         )
+    }
+
+    val lockSessionRecorder: LockSessionRecorder by lazy {
+        LockSessionRecorder(statisticsRepository)
     }
 
     val lockReconciliationRunner: LockReconciliationRunner by lazy {

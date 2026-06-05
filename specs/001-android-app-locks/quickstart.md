@@ -198,6 +198,33 @@ Expected outcome:
 - Values match local lock session history.
 - No account, cloud sync, analytics, social, or coaching surface appears.
 
+## Scenario 5A: Black and White System Theme
+
+1. Switch the test device to light appearance:
+
+   ```bash
+   adb shell cmd uimode night no
+   adb shell am force-stop com.lockin
+   adb shell am start -n com.lockin/.MainActivity
+   ```
+
+2. Verify Lockin uses black text and controls on a white background.
+3. Switch the test device to dark appearance:
+
+   ```bash
+   adb shell cmd uimode night yes
+   adb shell am force-stop com.lockin
+   adb shell am start -n com.lockin/.MainActivity
+   ```
+
+4. Verify Lockin uses white text and controls on a black background.
+
+Expected outcome:
+
+- Lockin follows the system light/dark appearance.
+- Lockin does not expose an in-app theme switcher.
+- In-app surfaces use only black and white for the product UI.
+
 ## Scenario 6: Clock Change Resistance
 
 1. Create an active lock.

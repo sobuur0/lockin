@@ -158,21 +158,21 @@
 
 ### Verification for User Story 4
 
-- [ ] T074 [P] [US4] Add unit tests for statistic summary calculations in `app/src/test/kotlin/com/lockin/domain/statistics/StatisticsCalculatorTest.kt`
-- [ ] T075 [P] [US4] Add Room integration tests for statistics queries across completed sessions and moods in `app/src/test/kotlin/com/lockin/data/StatisticsRepositoryTest.kt`
-- [ ] T076 [P] [US4] Add ViewModel tests for active-lock-first home state in `app/src/test/kotlin/com/lockin/ui/home/HomeViewModelTest.kt`
-- [ ] T077 [P] [US4] Add ViewModel tests for local-only statistics and empty history state in `app/src/test/kotlin/com/lockin/ui/stats/StatsViewModelTest.kt`
-- [ ] T078 [US4] Add UI verification notes for black-and-white light/dark theme behavior in `specs/001-android-app-locks/quickstart.md`
+- [X] T074 [P] [US4] Add unit tests for statistic summary calculations in `app/src/test/kotlin/com/lockin/domain/statistics/StatisticsCalculatorTest.kt`
+- [X] T075 [P] [US4] Add Room integration tests for statistics queries across completed sessions and moods in `app/src/test/kotlin/com/lockin/data/StatisticsRepositoryTest.kt`
+- [X] T076 [P] [US4] Add ViewModel tests for active-lock-first home state in `app/src/test/kotlin/com/lockin/ui/home/HomeViewModelTest.kt`
+- [X] T077 [P] [US4] Add ViewModel tests for local-only statistics and empty history state in `app/src/test/kotlin/com/lockin/ui/stats/StatsViewModelTest.kt`
+- [X] T078 [US4] Add UI verification notes for black-and-white light/dark theme behavior in `specs/001-android-app-locks/quickstart.md`
 
 ### Implementation for User Story 4
 
-- [ ] T079 [P] [US4] Implement lock session completion writer in `app/src/main/kotlin/com/lockin/domain/statistics/LockSessionRecorder.kt`
-- [ ] T080 [P] [US4] Implement statistic summary calculator for required local metrics in `app/src/main/kotlin/com/lockin/domain/statistics/StatisticsCalculator.kt`
-- [ ] T081 [US4] Implement home ViewModel prioritizing active locks, blocked apps, and remaining time in `app/src/main/kotlin/com/lockin/ui/home/HomeViewModel.kt`
-- [ ] T082 [US4] Implement home Compose screen with active-lock-first layout and no coaching copy in `app/src/main/kotlin/com/lockin/ui/home/HomeScreen.kt`
-- [ ] T083 [US4] Implement statistics ViewModel for total duration, most blocked apps, unique apps, completed count, longest duration, average duration, and most used mood in `app/src/main/kotlin/com/lockin/ui/stats/StatsViewModel.kt`
-- [ ] T084 [US4] Implement statistics Compose screen with local-only summaries and empty state in `app/src/main/kotlin/com/lockin/ui/stats/StatsScreen.kt`
-- [ ] T085 [US4] Wire home and statistics routes into the root app shell in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
+- [X] T079 [P] [US4] Implement lock session completion writer in `app/src/main/kotlin/com/lockin/domain/statistics/LockSessionRecorder.kt`
+- [X] T080 [P] [US4] Implement statistic summary calculator for required local metrics in `app/src/main/kotlin/com/lockin/domain/statistics/StatisticsCalculator.kt`
+- [X] T081 [US4] Implement home ViewModel prioritizing active locks, blocked apps, and remaining time in `app/src/main/kotlin/com/lockin/ui/home/HomeViewModel.kt`
+- [X] T082 [US4] Implement home Compose screen with active-lock-first layout and no coaching copy in `app/src/main/kotlin/com/lockin/ui/home/HomeScreen.kt`
+- [X] T083 [US4] Implement statistics ViewModel for total duration, most blocked apps, unique apps, completed count, longest duration, average duration, and most used mood in `app/src/main/kotlin/com/lockin/ui/stats/StatsViewModel.kt`
+- [X] T084 [US4] Implement statistics Compose screen with local-only summaries and empty state in `app/src/main/kotlin/com/lockin/ui/stats/StatsScreen.kt`
+- [X] T085 [US4] Wire home and statistics routes into the root app shell in `app/src/main/kotlin/com/lockin/ui/app/LockinNavGraph.kt`
 
 **Checkpoint**: User Story 4 delivers active-lock visibility and local statistics.
 
