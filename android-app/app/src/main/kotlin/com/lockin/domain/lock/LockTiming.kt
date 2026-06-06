@@ -44,6 +44,20 @@ object LockTiming {
             nowElapsedRealtime = nowElapsedRealtime
         )
 
+    fun remainingDuration(
+        lock: LockEntity,
+        nowElapsedRealtime: Long,
+        nowWallTime: Long
+    ): RemainingDuration {
+        val wallRemaining = (lock.committedEndWallTime - nowWallTime).coerceAtLeast(0)
+        if (nowElapsedRealtime < lock.lastCheckpointElapsedRealtime) {
+            return RemainingDuration(wallRemaining)
+        }
+
+        val elapsedRemaining = remainingDuration(lock, nowElapsedRealtime).millis
+        return RemainingDuration(minOf(elapsedRemaining, wallRemaining))
+    }
+
     fun checkpoint(lock: LockEntity, nowElapsedRealtime: Long): LockCheckpoint {
         val remaining = remainingDuration(lock, nowElapsedRealtime)
         return LockCheckpoint(

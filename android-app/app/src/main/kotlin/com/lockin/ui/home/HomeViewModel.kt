@@ -50,8 +50,13 @@ class HomeViewModel(
     ): List<HomeActiveLockItem> {
         val namesByPackage = apps.associate { it.packageId to it.displayName }
         val nowElapsed = timeProvider.elapsedRealtimeMillis()
+        val nowWall = timeProvider.wallTimeMillis()
         return sortedBy { it.lock.committedEndWallTime }.map { lockWithApplications ->
-            val remaining = LockTiming.remainingDuration(lockWithApplications.lock, nowElapsed)
+            val remaining = LockTiming.remainingDuration(
+                lock = lockWithApplications.lock,
+                nowElapsedRealtime = nowElapsed,
+                nowWallTime = nowWall
+            )
             HomeActiveLockItem(
                 id = lockWithApplications.lock.id,
                 title = "Lock #${lockWithApplications.lock.id}",

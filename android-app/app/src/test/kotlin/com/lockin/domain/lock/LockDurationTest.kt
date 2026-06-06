@@ -1,5 +1,8 @@
 package com.lockin.domain.lock
 
+import com.lockin.data.entities.LockEntity
+import com.lockin.data.entities.LockSourceType
+import com.lockin.data.entities.LockStatus
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -47,4 +50,37 @@ class LockDurationTest {
 
         assertEquals(7_000L, remaining.millis)
     }
+
+    @Test
+    fun remainingDurationFallsBackToWallTimeAfterReboot() {
+        val remaining = LockTiming.remainingDuration(
+            lock = activeLock(
+                committedEndWallTime = 361_000L,
+                remainingAtCheckpoint = 300_000L,
+                checkpointElapsedRealtime = 601_000L
+            ),
+            nowElapsedRealtime = 2_000L,
+            nowWallTime = 181_000L
+        )
+
+        assertEquals(180_000L, remaining.millis)
+    }
+
+    private fun activeLock(
+        committedEndWallTime: Long,
+        remainingAtCheckpoint: Long,
+        checkpointElapsedRealtime: Long
+    ): LockEntity =
+        LockEntity(
+            status = LockStatus.ACTIVE,
+            createdAtWallTime = 1_000L,
+            startedAtWallTime = 1_000L,
+            startedAtElapsedRealtime = 1_000L,
+            committedEndWallTime = committedEndWallTime,
+            remainingDurationAtLastCheckpoint = remainingAtCheckpoint,
+            lastCheckpointElapsedRealtime = checkpointElapsedRealtime,
+            sourceType = LockSourceType.MANUAL,
+            sourceId = null,
+            confirmationTextVersion = 1
+        )
 }

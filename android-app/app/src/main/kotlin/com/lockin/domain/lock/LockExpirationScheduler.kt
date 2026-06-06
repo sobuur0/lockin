@@ -32,10 +32,15 @@ class AndroidLockExpirationScheduler(
 
     override suspend fun scheduleNextExpiration() {
         val nowElapsed = timeProvider.elapsedRealtimeMillis()
+        val nowWall = timeProvider.wallTimeMillis()
         val nextDelayMillis = lockRepository.observeActiveLocks()
             .first()
             .minOfOrNull { lockWithApplications ->
-                LockTiming.remainingDuration(lockWithApplications.lock, nowElapsed).millis
+                LockTiming.remainingDuration(
+                    lock = lockWithApplications.lock,
+                    nowElapsedRealtime = nowElapsed,
+                    nowWallTime = nowWall
+                ).millis
             }
 
         if (nextDelayMillis == null) {

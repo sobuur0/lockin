@@ -15,15 +15,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.lockin.data.entities.LockStatus
 import com.lockin.domain.lock.LockDurationUnit
 import com.lockin.ui.app.ActiveLockCard
 import com.lockin.ui.app.IrreversibleConfirmationCopy
 import com.lockin.ui.app.LockinDurationInput
 import com.lockin.ui.app.LockinEmptyState
 import com.lockin.ui.app.LockinSection
+import kotlinx.coroutines.delay
 
 @Composable
 fun LockDetailScreen(
@@ -32,8 +35,16 @@ fun LockDetailScreen(
     onExtensionUnitChange: (LockDurationUnit) -> Unit,
     onExtensionConfirmationChange: (Boolean) -> Unit,
     onExtendLock: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(state.lockId, state.status) {
+        while (state.status != LockStatus.COMPLETED) {
+            delay(1_000L)
+            onRefresh()
+        }
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->

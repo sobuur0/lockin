@@ -27,7 +27,11 @@ class LockExpirationReconciler(
         val nowWall = timeProvider.wallTimeMillis()
         val expiredLocks = activeLocks.filter { lockWithApplications ->
             val lock = lockWithApplications.lock
-            LockTiming.remainingDuration(lock, nowElapsed).isElapsed ||
+            LockTiming.remainingDuration(
+                lock = lock,
+                nowElapsedRealtime = nowElapsed,
+                nowWallTime = nowWall
+            ).isElapsed ||
                 nowWall >= lock.committedEndWallTime
         }
 

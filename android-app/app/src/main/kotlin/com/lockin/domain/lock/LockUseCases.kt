@@ -93,7 +93,11 @@ class LockUseCases(
 
         val nowWallTime = timeProvider.wallTimeMillis()
         val nowElapsed = timeProvider.elapsedRealtimeMillis()
-        val remaining = LockTiming.remainingDuration(lock, nowElapsed)
+        val remaining = LockTiming.remainingDuration(
+            lock = lock,
+            nowElapsedRealtime = nowElapsed,
+            nowWallTime = nowWallTime
+        )
         val calculation = LockTiming.calculateExtension(
             currentRemainingMillis = remaining.millis,
             extension = extension,

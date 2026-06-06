@@ -155,7 +155,8 @@ fun LockinNavGraph(
                 onExtensionAmountChange = viewModel::setExtensionAmount,
                 onExtensionUnitChange = viewModel::setExtensionUnit,
                 onExtensionConfirmationChange = viewModel::setExtensionConfirmed,
-                onExtendLock = viewModel::extendLock
+                onExtendLock = viewModel::extendLock,
+                onRefresh = viewModel::refresh
             )
         }
         composable(LockinRoutes.GROUPS) {

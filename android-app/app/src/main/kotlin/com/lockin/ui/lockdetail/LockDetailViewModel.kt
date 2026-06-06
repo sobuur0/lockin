@@ -42,13 +42,14 @@ data class LockDetailUiState(
     private companion object {
         fun formatDuration(millis: Long): String {
             val totalMinutes = (millis / 60_000L).coerceAtLeast(0)
+            val seconds = ((millis / 1_000L) % 60L).coerceAtLeast(0)
             val days = totalMinutes / (24L * 60L)
             val hours = (totalMinutes % (24L * 60L)) / 60L
             val minutes = totalMinutes % 60L
             return when {
                 days > 0 -> "${days}d ${hours}h"
                 hours > 0 -> "${hours}h ${minutes}m"
-                else -> "${minutes}m"
+                else -> "${minutes}m ${seconds}s"
             }
         }
     }
@@ -70,34 +71,39 @@ class LockDetailViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            val lockWithApplications = lockRepository.getLockWithApplications(lockId)
-            if (lockWithApplications == null) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = "Lock not found."
-                )
-                return@launch
-            }
-
-            val lock = lockWithApplications.lock
-            val remaining = LockTiming.remainingDuration(
-                lock = lock,
-                nowElapsedRealtime = timeProvider.elapsedRealtimeMillis()
-            )
-            val appLabels = lockWithApplications.applications.map { lockApplication ->
-                appRepository.getApp(lockApplication.packageId)?.displayName
-                    ?: lockApplication.packageId
-            }
-
-            _uiState.value = _uiState.value.copy(
-                status = lock.status,
-                remainingMillis = remaining.millis,
-                committedEndWallTime = lock.committedEndWallTime,
-                blockedApps = appLabels,
-                isLoading = false,
-                errorMessage = null
-            )
+            refreshSnapshot()
         }
+    }
+
+    private suspend fun refreshSnapshot() {
+        val lockWithApplications = lockRepository.getLockWithApplications(lockId)
+        if (lockWithApplications == null) {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                errorMessage = "Lock not found."
+            )
+            return
+        }
+
+        val lock = lockWithApplications.lock
+        val remaining = LockTiming.remainingDuration(
+            lock = lock,
+            nowElapsedRealtime = timeProvider.elapsedRealtimeMillis(),
+            nowWallTime = timeProvider.wallTimeMillis()
+        )
+        val appLabels = lockWithApplications.applications.map { lockApplication ->
+            appRepository.getApp(lockApplication.packageId)?.displayName
+                ?: lockApplication.packageId
+        }
+
+        _uiState.value = _uiState.value.copy(
+            status = lock.status,
+            remainingMillis = remaining.millis,
+            committedEndWallTime = lock.committedEndWallTime,
+            blockedApps = appLabels,
+            isLoading = false,
+            errorMessage = null
+        )
     }
 
     fun setExtensionAmount(value: String) {
