@@ -8,9 +8,9 @@ Lockin is not currently a normal consumer Android app for an already-set-up pers
 
 ## Demo
 
-<video src="./lockin_demo_3x.mp4" controls width="720"></video>
+![Lockin demo](./lockin_demo_3x.gif)
 
-This demo is shown at 3x speed to keep the walkthrough short.
+This demo is shown at 3x speed to keep the walkthrough short. The MP4 version is included as `lockin_demo_3x.mp4`.
 
 ## Product Boundaries
 
