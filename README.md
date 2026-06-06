@@ -8,9 +8,9 @@ Lockin is not currently a normal consumer Android app for an already-set-up pers
 
 ## Demo
 
-![Lockin demo](./lockin_demo_3x.gif)
+https://github.com/user-attachments/assets/f2331097-e393-4bcb-8cf5-1e9db2f7afcc
 
-This demo is shown at 3x speed to keep the walkthrough short. The MP4 version is included as `lockin_demo_3x.mp4`.
+This demo is shown at 3x speed to keep the walkthrough short.
 
 ## Product Boundaries
 
@@ -62,4 +62,26 @@ If Device Owner setup fails because accounts, profiles, or another owner already
 
 Do not press Android Studio Run/rerun while waiting for a lock to expire. Android Studio force-stops the app during reinstall, and Android cancels pending alarms for force-stopped packages until the app is launched again.
 
-For managed-device validation, use `specs/001-android-app-locks/quickstart.md`. It includes the Device Owner setup path, app lock scenarios, reboot/reinstall checks, expiration release checks, theme checks, and the accepted factory-reset recovery path.
+## Managed-Device Validation
+
+Use a disposable emulator or test device.
+
+1. Install and provision Lockin as Device Owner.
+2. Create a short lock for a non-essential app such as Chrome.
+3. Confirm the locked app disappears or cannot be launched while the lock is active.
+4. Extend the lock and confirm the remaining time increases.
+5. Reboot the device before the lock expires and confirm the app is still locked.
+6. Open Lockin and confirm the lock timer continues counting down live.
+7. Wait for the timer to end and confirm the app returns automatically.
+8. Switch between light and dark mode and confirm Lockin stays black and white while matching the phone's current theme.
+
+Useful adb checks:
+
+```bash
+adb shell dpm list-owners
+adb shell monkey -p com.android.chrome 1
+adb reboot
+adb wait-for-device
+```
+
+If an app remains hidden after expiry, open Lockin to trigger startup reconciliation. If the device needs to be recovered before a lock expires, factory reset or wipe the managed test device.
