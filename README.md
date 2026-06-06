@@ -6,6 +6,12 @@ Lockin is an offline Android Device Owner app for creating irreversible app lock
 
 Lockin is not currently a normal consumer Android app for an already-set-up personal phone. It is built around Android Device Owner mode, which is intended for fresh, factory-reset, or deliberately managed devices.
 
+## Demo
+
+<video src="./lockin_demo_3x.mp4" controls width="720"></video>
+
+This demo is shown at 3x speed to keep the walkthrough short.
+
 ## Product Boundaries
 
 - Lockin is local-only. It has no accounts, sync, analytics, remote management, network access, VPN behavior, or website blocking.

@@ -1,4 +1,8 @@
 .DS_Store
+AGENTS.md
+.agents/
+.specify/
+specs/001-android-app-locks/
 *.class
 *.iml
 *.jar
